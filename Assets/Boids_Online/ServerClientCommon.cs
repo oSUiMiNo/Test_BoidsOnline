@@ -1,16 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
 
 public class ServerClientCommon : MonoBehaviourMyExtention
 {
-    public void  LoadAvatar(string avatarName)
+    public void LoadAvatar(string json)
     {
+        Debug.Log("LoadAvatar1");
+        var model = JsonConvert.DeserializeObject<LoadAvatarJModel>(json);
+        
         GameObject avatar = LoadPrefab("GPUBoids");
-        avatar.name = avatarName;
+        avatar.name = model.avatarName;
     }
 }
-
 
 
 
