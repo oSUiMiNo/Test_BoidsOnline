@@ -33,7 +33,7 @@ public class ServerClientCommon : MonoBehaviourMyExtention
         json_Received = string.Empty;
         avatar = LoadPrefab("GPUBoids");
         avatar.name = model.avatarName;
-        avatar.transform.position = new Vector3(rand.Next(-4, -4), 0.5f, rand.Next(-4, -4));
+        avatar.transform.position = new Vector3(rand.Next(-4, 4), 0.5f, rand.Next(-4, 4));
     }
 
 
