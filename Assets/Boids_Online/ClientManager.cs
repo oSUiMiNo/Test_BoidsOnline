@@ -41,8 +41,15 @@ public class ClientManager : MonoBehaviourMyExtention
 
         OnMessage += () =>
         {
-            common.Exequte();
+            Debug.Log("OnMessage");
+            //common.Exequte();
             common.json_Received = string.Empty;
+        };
+
+        ws.OnOpen += (sender, e) =>
+        {
+            Debug.Log("OnOpen");
+            //common.LoadAvatar();
         };
 
         InputEventHandler.OnKeyDown_A += () => common.LoadAvatar(true);

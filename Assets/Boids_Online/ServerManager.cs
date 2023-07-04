@@ -4,7 +4,6 @@ using WebSocketSharp;
 using WebSocketSharp.Server;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using UnityEditor.PackageManager;
 //using WebSocketSharp.Net;
 public class ServerManager : MonoBehaviourMyExtention
 {

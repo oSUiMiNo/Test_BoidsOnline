@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
-using PlasticGui;
 using BoidsSimulationOnGPU;
 
 public class ServerClientCommon : MonoBehaviourMyExtention
