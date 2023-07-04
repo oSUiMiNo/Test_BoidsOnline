@@ -30,13 +30,18 @@ public class ServerClientCommon : MonoBehaviourMyExtention
         Debug.Log("LoadAvatar");
         avatar = LoadPrefab("GPUBoids");
 
-        if (isLocalCall)
+        if (isLocalCall) // もし自分の関数呼び出しだったら
         {
-            avatar.transform.position = new Vector3(rand.Next(-4, 4), 0.5f, rand.Next(-4, 4));
+            Vector3 position = new Vector3(rand.Next(-4, 4), 0.5f, rand.Next(-4, 4));
+            avatar.transform.position = position;
+            avatar.name = avatarName;
+
             Packet_LoadAvatar packet_LoadAvatar = new Packet_LoadAvatar()
             {
                 avatarName = avatarName,
-                position = avatar.transform.position,
+                positionX = position.x,
+                positionY = position.y,
+                positionZ = position.z,
             };
             string json_Send = JsonConvert.SerializeObject(packet_LoadAvatar);
             clientManager.ws.Send(json_Send);
@@ -44,8 +49,10 @@ public class ServerClientCommon : MonoBehaviourMyExtention
         else 
         {
             var model = JsonConvert.DeserializeObject<Packet_LoadAvatar>(json_Received);
+            
+            Vector3 position = new Vector3(model.positionX, model.positionY, model.positionZ);
+            avatar.transform.position = position;
             avatar.name = model.avatarName;
-            avatar.transform.position = model.position;
         }
     }
 
@@ -53,12 +60,11 @@ public class ServerClientCommon : MonoBehaviourMyExtention
     public void ChangeSpeed(bool isLocalCall = false, int maxSpeed = 1)
     {
         Debug.Log("ChangeSpeed");
-        
-        // もし自分の関数呼び出しだったら
-        if (isLocalCall)
+       
+        if (isLocalCall) // もし自分の関数呼び出しだったら
         {
-            // スピード変更
-            avatar.GetComponent<GPUBoids>().MaxSpeed = maxSpeed;  
+            avatar.GetComponent<GPUBoids>().MaxSpeed = maxSpeed;  // スピード変更
+
             // サーバーに送信
             Packet_ChangeSeed packet_ChangeSeed = new Packet_ChangeSeed()
             {
@@ -91,6 +97,14 @@ public abstract class Packet
 }
 
 
+public class Packet_ClientInfo : Packet
+{
+    public Packet_ClientInfo()
+    {
+        funcName = "ClientInfo";
+    }
+}
+
 public class Packet_LoadAvatar : Packet
 {
     public Packet_LoadAvatar() 
@@ -98,7 +112,9 @@ public class Packet_LoadAvatar : Packet
         funcName = "LoadAvatar";
     }
     public string avatarName;
-    public Vector3 position;
+    public float positionX;
+    public float positionY;
+    public float positionZ;
 }
 
 public class Packet_ChangeSeed : Packet

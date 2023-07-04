@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using WebSocketSharp;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 public class ClientManager : MonoBehaviourMyExtention
 {
@@ -24,8 +25,7 @@ public class ClientManager : MonoBehaviourMyExtention
     }
 
 
-    
-
+    string json;
 
     void Start()
     {
@@ -36,21 +36,24 @@ public class ClientManager : MonoBehaviourMyExtention
         ws.Connect();
 
         //サーバからメッセージを受信したときに実行する処理「RecvText」を登録する
-        ws.OnMessage += (sender, e) => common.json_Received = e.Data;
+        ws.OnMessage += (sender, e) => json = e.Data;
         ws.OnMessage += (sender, e) => messageReceived = true;
 
         OnMessage += () =>
         {
-            Debug.Log("OnMessage");
+            Debug.Log(json);
+            common.json_Received = json;
+
+            JObject jObj = JObject.Parse(json);
+            if ((string)jObj["funcName"] == "ClientInfo")
+            {
+                common.LoadAvatar(true);
+            }
+
             //common.Exequte();
             common.json_Received = string.Empty;
         };
 
-        ws.OnOpen += (sender, e) =>
-        {
-            Debug.Log("OnOpen");
-            //common.LoadAvatar();
-        };
 
         InputEventHandler.OnKeyDown_A += () => common.LoadAvatar(true);
         InputEventHandler.OnKeyDown_S += () => common.ChangeSpeed(true, 15);
@@ -58,7 +61,6 @@ public class ClientManager : MonoBehaviourMyExtention
         //サーバとの接続が切れたときに実行する処理「RecvClose」を登録する
         ws.OnClose += (sender, e) => RecvClose();
     }
-
 
     //WebSocket の OnMessage だと何故か Resources からのロードが出来ないので仕方ないからフラグで別の Action 作って間接的にやる
     bool messageReceived = false;

@@ -50,35 +50,42 @@ public class ServerManager : MonoBehaviourMyExtention
 
             Debug.Log("Seq" + this.seq + " Login. (" + this.ID + ")");
 
-            packets.Add("LoadAvatar", 
-                new Packet_LoadAvatar()
-                {
-                    avatarName = $"avatar{seq}"
-                });
-            packets.Add("ChangeSeed",
-                new Packet_ChangeSeed()
-                {
-                    maxSpeed = 5
-                });
-            packets.Add("ChangeSize",
-                new Packet_ChangeSize()
-                {
-                    size = 2
-                });
+            this.Send("");
 
-            playerInfomations.Add(packets);
+            Packet_ClientInfo packet_ClientInfo = new Packet_ClientInfo() { };
+            string json = JsonConvert.SerializeObject(packet_ClientInfo);
+            this.Send(json);
 
-            //string json = JsonConvert.SerializeObject(playerInfomations[seq - 1]["LoadAvatar"]);
+            //packets.Add("LoadAvatar", 
+            //    new Packet_LoadAvatar()
+            //    {
+            //        avatarName = $"avatar{seq}"
+            //    });
+            //packets.Add("ChangeSeed",
+            //    new Packet_ChangeSeed()
+            //    {
+            //        maxSpeed = 5
+            //    });
+            //packets.Add("ChangeSize",
+            //    new Packet_ChangeSize()
+            //    {
+            //        size = 2
+            //    });
 
-            foreach (var a in playerInfomations)
-            {
-                foreach (var b in a)
-                {
-                    string json = JsonConvert.SerializeObject(b);
-                    clientList[seq - 1].Send(json);
-                }
-            }
+            //playerInfomations.Add(packets);
+
+            ////string json = JsonConvert.SerializeObject(playerInfomations[seq - 1]["LoadAvatar"]);
+
+            //foreach (var a in playerInfomations)
+            //{
+            //    foreach (var b in a)
+            //    {
+            //        string json = JsonConvert.SerializeObject(b);
+            //        clientList[seq - 1].Send(json);
+            //    }
+            //}
         }
+
         //誰かがメッセージを送信してきたときに呼ばれるメソッド
         protected override void OnMessage(MessageEventArgs e)
         {
