@@ -3,6 +3,7 @@ using UnityEngine;
 using WebSocketSharp;
 using WebSocketSharp.Server;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 //using WebSocketSharp.Net;
 public class ServerManager : MonoBehaviourMyExtention
 {
@@ -28,6 +29,10 @@ public class ServerManager : MonoBehaviourMyExtention
 
     public class ExWebSocketBehavior : WebSocketBehavior
     {
+        public List<Dictionary<string, Packet>> playerInfomations = new List<Dictionary<string, Packet>>();
+        Dictionary<string, Packet> packets = new Dictionary<string, Packet>();
+
+
         //誰が現在接続しているのか管理するリスト。
         public static List<ExWebSocketBehavior> clientList = new List<ExWebSocketBehavior>();
         //接続者に番号を振るための変数。
@@ -45,27 +50,55 @@ public class ServerManager : MonoBehaviourMyExtention
 
             Debug.Log("Seq" + this.seq + " Login. (" + this.ID + ")");
 
-            LoadAvatarJModel model = new LoadAvatarJModel()
-            {
-                funcName = "LoadAvatar",
-                avatarName = $"avatar{seq}"
-            };
-            string json = JsonConvert.SerializeObject(model);
+            packets.Add("LoadAvatar", 
+                new Packet_LoadAvatar()
+                {
+                    avatarName = $"avatar{seq}"
+                });
+            packets.Add("ChangeSeed",
+                new Packet_ChangeSeed()
+                {
+                    maxSpeed = 5
+                });
+            packets.Add("ChangeSize",
+                new Packet_ChangeSize()
+                {
+                    size = 2
+                });
+
+            playerInfomations.Add(packets);
+
+            //string json = JsonConvert.SerializeObject(playerInfomations[seq - 1]["LoadAvatar"]);
             //接続者全員にメッセージを送る
             foreach (var client in clientList)
             {
                 client.Send("Seq:" + seq + " Login.");
-                client.Send(json);
+                foreach (var a in playerInfomations)
+                {
+                    foreach(var b in a)
+                    {
+                        string json = JsonConvert.SerializeObject(b);
+                        client.Send(json);
+                    }
+                }
             }
         }
         //誰かがメッセージを送信してきたときに呼ばれるメソッド
         protected override void OnMessage(MessageEventArgs e)
         {
             Debug.Log("Seq:" + seq + "..." + e.Data);
+
+            JObject model = JObject.Parse(e.Data);
+
+            playerInfomations[seq - 1][(string)model["funcName"]] = (Packet)(object)model;
+            
             //接続者全員にメッセージを送る
             foreach (var client in clientList)
             {
-                client.Send("Seq:" + seq + "..." + e.Data);
+                if(client != clientList[seq - 1])
+                {
+                    client.Send(e.Data);
+                }
             }
         }
 
