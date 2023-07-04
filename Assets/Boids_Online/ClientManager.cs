@@ -45,7 +45,8 @@ public class ClientManager : MonoBehaviourMyExtention
             common.json_Received = string.Empty;
         };
 
-        InputEventHandler.OnKeyDown_A += () => common.ChangeSpeed(true, 15);
+        InputEventHandler.OnKeyDown_A += () => common.LoadAvatar(true);
+        InputEventHandler.OnKeyDown_S += () => common.ChangeSpeed(true, 15);
         
         //サーバとの接続が切れたときに実行する処理「RecvClose」を登録する
         ws.OnClose += (sender, e) => RecvClose();
