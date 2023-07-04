@@ -5,7 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Boids_Online/Boids_Server.unity
     guid: 4b5ab7af7d7708d439110624e38c90dd
+  - enabled: 1
+    path: Assets/Boids_Online/Boids_Client.unity
+    guid: 32475dc2433dae0439ac197881589c55
   m_configObjects: {}

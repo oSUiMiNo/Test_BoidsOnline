@@ -11,6 +11,10 @@ public class ServerClientCommon : MonoBehaviourMyExtention
     public ClientManager clientManager;
     System.Random rand = new System.Random();
 
+
+    
+
+
     private void Start()
     {
         clientManager = GetComponent<ClientManager>();
@@ -96,6 +100,15 @@ public abstract class Packet
     public string funcName;
 }
 
+
+public class Packet_Text : Packet
+{
+    public Packet_Text()
+    {
+        funcName = "Text";
+    }
+    public string text;
+}
 
 public class Packet_ClientInfo : Packet
 {

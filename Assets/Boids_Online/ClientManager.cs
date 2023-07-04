@@ -9,6 +9,7 @@ public class ClientManager : MonoBehaviourMyExtention
 {
     public WebSocket ws;
 
+    Packet_ClientInfo packet_ClientInfo = new Packet_ClientInfo();
     ServerClientCommon common;
 
     //サーバへ、メッセージを送信する
@@ -41,12 +42,15 @@ public class ClientManager : MonoBehaviourMyExtention
 
         OnMessage += () =>
         {
+            Debug.Log("OnMessage");
             Debug.Log(json);
             common.json_Received = json;
 
             JObject jObj = JObject.Parse(json);
             if ((string)jObj["funcName"] == "ClientInfo")
             {
+                packet_ClientInfo.clientNnmber = (int)jObj["clientNnmber"];
+                Debug.Log((int)jObj["clientNnmber"]);
                 common.LoadAvatar(true);
             }
 
@@ -57,7 +61,8 @@ public class ClientManager : MonoBehaviourMyExtention
 
         InputEventHandler.OnKeyDown_A += () => common.LoadAvatar(true);
         InputEventHandler.OnKeyDown_S += () => common.ChangeSpeed(true, 15);
-        
+        InputEventHandler.OnKeyDown_D += () => Debug.Log(packet_ClientInfo.clientNnmber);
+
         //サーバとの接続が切れたときに実行する処理「RecvClose」を登録する
         ws.OnClose += (sender, e) => RecvClose();
     }

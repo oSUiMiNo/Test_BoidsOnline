@@ -116,10 +116,26 @@ public class ServerManager : MonoBehaviourMyExtention
             //ログアウトした人を、リストから削除。
             clientList.Remove(this);
 
+
             //接続者全員にメッセージを送る
             foreach (var client in clientList)
             {
-                client.Send("Seq:" + seq + " Logout.");
+                string json;
+
+                Packet_Text packet_Text = new Packet_Text()
+                {
+                    text = $"Seq:{seq}  Logout."
+                };
+                json = JsonConvert.SerializeObject(packet_Text);
+                client.Send(json);
+
+                int newSeq = clientList.IndexOf(client);
+                Packet_ClientInfo packet_ClientInfo = new Packet_ClientInfo()
+                {
+                    clientNnmber = newSeq
+                };
+                json = JsonConvert.SerializeObject(packet_ClientInfo);
+                client.Send(json);
             }
         }
     }
