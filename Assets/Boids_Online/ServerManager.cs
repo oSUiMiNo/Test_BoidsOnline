@@ -51,9 +51,11 @@ public class ServerManager : MonoBehaviourMyExtention
 
             Debug.Log("Seq" + this.seq + " Login. (" + this.ID + ")");
 
-            this.Send("");
 
-            Packet_ClientInfo packet_ClientInfo = new Packet_ClientInfo() { };
+            Packet_ClientInfo packet_ClientInfo = new Packet_ClientInfo()
+            {
+                clientNnmber = seq
+            };
             string json = JsonConvert.SerializeObject(packet_ClientInfo);
             this.Send(json);
 

@@ -103,6 +103,7 @@ public class Packet_ClientInfo : Packet
     {
         funcName = "ClientInfo";
     }
+    public int clientNnmber;
 }
 
 public class Packet_LoadAvatar : Packet
