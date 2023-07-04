@@ -29,11 +29,25 @@ public class ServerClientCommon : MonoBehaviourMyExtention
     public void LoadAvatar(bool isLocalCall = false, string avatarName = "")
     {
         Debug.Log("LoadAvatar");
-        var model = JsonConvert.DeserializeObject<Packet_LoadAvatar>(json_Received);
-        json_Received = string.Empty;
         avatar = LoadPrefab("GPUBoids");
-        avatar.name = model.avatarName;
-        avatar.transform.position = new Vector3(rand.Next(-4, 4), 0.5f, rand.Next(-4, 4));
+
+        if (isLocalCall)
+        {
+            avatar.transform.position = new Vector3(rand.Next(-4, 4), 0.5f, rand.Next(-4, 4));
+            Packet_LoadAvatar packet_LoadAvatar = new Packet_LoadAvatar()
+            {
+                avatarName = avatarName,
+                position = avatar.transform.position,
+            };
+            string json_Send = JsonConvert.SerializeObject(packet_LoadAvatar);
+            clientManager.ws.Send(json_Send);
+        }
+        else 
+        {
+            var model = JsonConvert.DeserializeObject<Packet_LoadAvatar>(json_Received);
+            avatar.name = model.avatarName;
+            avatar.transform.position = model.position;
+        }
     }
 
 
@@ -85,6 +99,7 @@ public class Packet_LoadAvatar : Packet
         funcName = "LoadAvatar";
     }
     public string avatarName;
+    public Vector3 position;
 }
 
 public class Packet_ChangeSeed : Packet

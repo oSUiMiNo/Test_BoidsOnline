@@ -4,6 +4,7 @@ using WebSocketSharp;
 using WebSocketSharp.Server;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using UnityEditor.PackageManager;
 //using WebSocketSharp.Net;
 public class ServerManager : MonoBehaviourMyExtention
 {
@@ -69,17 +70,13 @@ public class ServerManager : MonoBehaviourMyExtention
             playerInfomations.Add(packets);
 
             //string json = JsonConvert.SerializeObject(playerInfomations[seq - 1]["LoadAvatar"]);
-            //接続者全員にメッセージを送る
-            foreach (var client in clientList)
+
+            foreach (var a in playerInfomations)
             {
-                client.Send("Seq:" + seq + " Login.");
-                foreach (var a in playerInfomations)
+                foreach (var b in a)
                 {
-                    foreach(var b in a)
-                    {
-                        string json = JsonConvert.SerializeObject(b);
-                        client.Send(json);
-                    }
+                    string json = JsonConvert.SerializeObject(b);
+                    clientList[seq - 1].Send(json);
                 }
             }
         }
