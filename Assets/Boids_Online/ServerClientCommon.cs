@@ -10,6 +10,7 @@ public class ServerClientCommon : MonoBehaviourMyExtention
     public string json_Received;
     public GameObject avatar;
     public ClientManager clientManager;
+    System.Random rand = new System.Random();
 
     private void Start()
     {
@@ -32,7 +33,9 @@ public class ServerClientCommon : MonoBehaviourMyExtention
         json_Received = string.Empty;
         avatar = LoadPrefab("GPUBoids");
         avatar.name = model.avatarName;
+        avatar.transform.position = new Vector3(rand.Next(-4, -4), 0.5f, rand.Next(-4, -4));
     }
+
 
     public void ChangeSpeed(bool isLocalCall = false, int maxSpeed = 1)
     {
@@ -59,6 +62,7 @@ public class ServerClientCommon : MonoBehaviourMyExtention
             avatar.GetComponent<GPUBoids>().MaxSpeed = model.maxSpeed;
         }
     }
+
 
     public void ChangeSize(bool isLocalCall = false, int maxSize = 1)
     {

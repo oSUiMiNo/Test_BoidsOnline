@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7024026024209352714}
   - component: {fileID: 7024026024209352713}
   m_Layer: 0
-  m_Name: GPUBoids
+  m_Name: GPUBoids1
   m_TagString: Avatar
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
