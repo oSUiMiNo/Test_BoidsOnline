@@ -36,7 +36,7 @@ public class ServerManager : MonoBehaviourMyExtention
         //誰が現在接続しているのか管理するリスト。
         public static List<ExWebSocketBehavior> clientList = new List<ExWebSocketBehavior>();
         //接続者に番号を振るための変数。
-        static int globalSeq = 0;
+        //static int globalSeq = 0;
         //自身の番号
         int seq;
 
@@ -44,9 +44,10 @@ public class ServerManager : MonoBehaviourMyExtention
         protected override void OnOpen()
         {
             //ログインしてきた人には、番号をつけて、リストに登録。
-            globalSeq++;
-            this.seq = globalSeq;
+            //globalSeq++;
+            //this.seq = globalSeq;
             clientList.Add(this);
+            seq = clientList.IndexOf(this);
 
             Debug.Log("Seq" + this.seq + " Login. (" + this.ID + ")");
 
