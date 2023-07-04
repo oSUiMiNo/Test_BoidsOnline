@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6066240189521094124}
   - component: {fileID: 7137028121370936361}
   m_Layer: 0
-  m_Name: BPUBoids
+  m_Name: GPUBoids
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
