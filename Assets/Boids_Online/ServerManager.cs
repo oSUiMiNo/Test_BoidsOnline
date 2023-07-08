@@ -30,8 +30,7 @@ public class ServerManager : MonoBehaviourMyExtention
     public class ExWebSocketBehavior : WebSocketBehavior
     {
         public List<Dictionary<string, Packet>> playerInfomations = new List<Dictionary<string, Packet>>();
-        Dictionary<string, Packet> packets = new Dictionary<string, Packet>();
-
+        
 
         //誰が現在接続しているのか管理するリスト。
         public static List<ExWebSocketBehavior> clientList = new List<ExWebSocketBehavior>();
@@ -59,34 +58,56 @@ public class ServerManager : MonoBehaviourMyExtention
             string json = JsonConvert.SerializeObject(packet_ClientInfo);
             this.Send(json);
 
-            //packets.Add("LoadAvatar", 
-            //    new Packet_LoadAvatar()
-            //    {
-            //        avatarName = $"avatar{seq}"
-            //    });
-            //packets.Add("ChangeSeed",
-            //    new Packet_ChangeSeed()
-            //    {
-            //        maxSpeed = 5
-            //    });
-            //packets.Add("ChangeSize",
-            //    new Packet_ChangeSize()
-            //    {
-            //        size = 2
-            //    });
+            Dictionary<string, Packet> packets = new Dictionary<string, Packet>()
+            {
+                {
+                    "ClientInfo",
+                    new Packet_ClientInfo()
+                    {
+                        clientNnmber = seq
+                    }
+                },
+                {
+                    "LoadAvatar",
+                    new Packet_LoadAvatar()
+                    {
+                        avatarName = $"avatar{seq}"
+                    }
+                },
+                {
+                    "ChangeSeed",
+                    new Packet_ChangeSeed()
+                    {
+                        maxSpeed = 5
+                    }
+                },
+                {
+                    "ChangeSize",
+                new Packet_ChangeSize()
+                    {
+                        size = 2
+                    }
+                }
 
-            //playerInfomations.Add(packets);
+            };
+          
 
-            ////string json = JsonConvert.SerializeObject(playerInfomations[seq - 1]["LoadAvatar"]);
+            playerInfomations.Add(packets);
 
-            //foreach (var a in playerInfomations)
-            //{
-            //    foreach (var b in a)
-            //    {
-            //        string json = JsonConvert.SerializeObject(b);
-            //        clientList[seq - 1].Send(json);
-            //    }
-            //}
+            string json1 = JsonConvert.SerializeObject(playerInfomations);
+
+            Debug.Log(json1);
+
+            //string json = JsonConvert.SerializeObject(playerInfomations[seq - 1]["LoadAvatar"]);
+
+            foreach (var a in playerInfomations)
+            {
+                foreach (var b in a)
+                {
+                    string json2 = JsonConvert.SerializeObject(b);
+                    clientList[seq - 1].Send(json2);
+                }
+            }
         }
 
         //誰かがメッセージを送信してきたときに呼ばれるメソッド

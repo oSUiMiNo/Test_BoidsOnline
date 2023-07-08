@@ -12,9 +12,6 @@ public class ServerClientCommon : MonoBehaviourMyExtention
     System.Random rand = new System.Random();
 
 
-    
-
-
     private void Start()
     {
         clientManager = GetComponent<ClientManager>();

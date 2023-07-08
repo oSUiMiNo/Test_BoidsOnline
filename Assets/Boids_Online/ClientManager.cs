@@ -4,12 +4,14 @@ using TMPro;
 using WebSocketSharp;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 
 public class ClientManager : MonoBehaviourMyExtention
 {
     public WebSocket ws;
 
     Packet_ClientInfo packet_ClientInfo = new Packet_ClientInfo();
+    public List<Dictionary<string, Packet>> playerInfomations = new List<Dictionary<string, Packet>>();
     ServerClientCommon common;
 
     //サーバへ、メッセージを送信する
@@ -47,12 +49,8 @@ public class ClientManager : MonoBehaviourMyExtention
             common.json_Received = json;
 
             JObject jObj = JObject.Parse(json);
-            if ((string)jObj["funcName"] == "ClientInfo")
-            {
-                packet_ClientInfo.clientNnmber = (int)jObj["clientNnmber"];
-                Debug.Log((int)jObj["clientNnmber"]);
-                common.LoadAvatar(true);
-            }
+
+            if ((string)jObj["funcName"] == "ClientInfo") InitClient(jObj);
 
             //common.Exequte();
             common.json_Received = string.Empty;
@@ -66,6 +64,16 @@ public class ClientManager : MonoBehaviourMyExtention
         //サーバとの接続が切れたときに実行する処理「RecvClose」を登録する
         ws.OnClose += (sender, e) => RecvClose();
     }
+
+
+    private void InitClient(JObject jObj)
+    {
+        packet_ClientInfo.clientNnmber = (int)jObj["clientNnmber"];
+        Debug.Log((int)jObj["clientNnmber"]);
+        common.LoadAvatar(true, $"avatar{(int)jObj["clientNnmber"]}");
+    }
+
+
 
     //WebSocket の OnMessage だと何故か Resources からのロードが出来ないので仕方ないからフラグで別の Action 作って間接的にやる
     bool messageReceived = false;
